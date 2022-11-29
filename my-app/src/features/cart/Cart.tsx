@@ -4,17 +4,25 @@ import {
   removeItem,
   selectItems,
   selectItemsQuantity,
+  selectTotal,
+  increaseQuantity,
+  decreaseQuantity,
+  selectIsDisplayed,
 } from './cartSlice';
 import './Cart.css';
 
 export function Cart() {
   const quantity: number = useAppSelector(selectItemsQuantity);
   const items: Item[] = useAppSelector(selectItems);
+  const total: number = useAppSelector(selectTotal);
+  const isDisplayed: boolean = useAppSelector(selectIsDisplayed);
+
   const dispatch = useAppDispatch();
 
   const renderRemoveButton = (id: string) => {
     return (
       <button
+        className='btn btn-light'
         onClick={() => {
           dispatch(removeItem(id));
         }}
@@ -24,17 +32,56 @@ export function Cart() {
     );
   };
 
+  const renderIncreaseButton = (id: string) => {
+    return (
+      <button
+        className='btn btn-light'
+        onClick={() => {
+          dispatch(increaseQuantity(id));
+        }}
+      >
+        +
+      </button>
+    );
+  };
+
+  const renderReduceButton = (id: string) => {
+    return (
+      <button
+        className='btn btn-light'
+        onClick={() => {
+          dispatch(decreaseQuantity(id));
+        }}
+      >
+        -
+      </button>
+    );
+  };
+
   return (
-    <div id='cart' className='cart'>
-      Koszyk: {quantity}
-      <ul>
+    <div
+      id='cart'
+      className={
+        'card position-absolute top-0 end-0 z-index-1 w-25 ' +
+        (isDisplayed ? 'd-block' : 'd-none')
+      }
+    >
+      <ul className='list-group list-group-flush'>
         {items.map((item, index) => (
-          <li key={index}>
-            {item.name} {item.price} ({item.quantity})
+          <li
+            key={index}
+            className='list-group-item d-flex justify-content-between align-items-center'
+          >
+            {item.name} {item.price} {renderReduceButton(item.id)}(
+            {item.quantity}){renderIncreaseButton(item.id)}{' '}
             {renderRemoveButton(item.id)}
           </li>
         ))}
       </ul>
+
+      <div className='card-footer d-flex justify-content-evenly'>
+        <span>Total: </span> <strong>{total} PLN</strong>
+      </div>
     </div>
   );
 }
