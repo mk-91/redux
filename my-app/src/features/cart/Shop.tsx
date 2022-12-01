@@ -1,4 +1,6 @@
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { Alert } from '../notifications/Alert';
+import { AlertList } from '../notifications/AlertList';
 import { ProductModel, selectProducts } from '../product/productsSlice';
 import { Cart } from './Cart';
 import { Product } from './Product';
@@ -14,7 +16,7 @@ export function Shop() {
     <div className='position-relative'>
       <Cart />
       <div className='container pt-5'>
-        <div className='products-list'>
+        <div className='products-list mb-5'>
           {products.map((product, key) => (
             <Product
               key={key}
@@ -24,6 +26,13 @@ export function Shop() {
             />
           ))}
         </div>
+
+        <AlertList />
+        {/* <Alert type='success' message='Produkt został dodany do koszyka.' />
+        <Alert type='info' message='Produkt został dodany do koszyka.' />
+        <Alert type='warning' message='Produkt został dodany do koszyka.' />
+        <Alert type='error' message='Produkt został dodany do koszyka.' />
+        <Alert type='defult' message='Produkt został dodany do koszyka.' /> */}
       </div>
     </div>
   );
