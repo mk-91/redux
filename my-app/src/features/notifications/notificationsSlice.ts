@@ -41,6 +41,9 @@ export const notificationsSlice = createSlice({
         message,
       };
       state.items.push(notification);
+      if (state.items.length > 3) {
+        state.items.shift();
+      }
     },
     removeNotifications: (state, action: PayloadAction<{ id: string }>) => {
       const { id } = action.payload;

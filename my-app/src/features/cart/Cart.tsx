@@ -10,6 +10,7 @@ import {
   selectIsDisplayed,
 } from './cartSlice';
 import './Cart.css';
+import { addNotifications } from '../notifications/notificationsSlice';
 
 export function Cart() {
   const quantity: number = useAppSelector(selectItemsQuantity);
@@ -20,13 +21,17 @@ export function Cart() {
   const dispatch = useAppDispatch();
 
   const renderRemoveButton = (id: string) => {
+    const handleClick = () => {
+      dispatch(removeItem(id));
+      dispatch(
+        addNotifications({
+          message: 'Produkt został usunięty z koszyka',
+          type: 'warning',
+        })
+      );
+    };
     return (
-      <button
-        className='btn btn-light'
-        onClick={() => {
-          dispatch(removeItem(id));
-        }}
-      >
+      <button className='btn btn-light' onClick={handleClick}>
         Remove
       </button>
     );
