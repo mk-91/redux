@@ -23,7 +23,7 @@ export function Product(product: ProductProps) {
     dispatch(addItem(item));
     dispatch(
       addNotifications({
-        message: 'Produkt został dodany do koszyka',
+        message: `Produkt ${item.name} został dodany do koszyka`,
         type: 'success',
       })
     );
@@ -33,7 +33,7 @@ export function Product(product: ProductProps) {
     <div className='card'>
       <div className='card-body'>
         <h3 className='card-title'>{product.name}</h3>
-        <span className='product-price'>{product.price}</span>
+        <span className='product-price'>{product.price} PLN</span>
         <button className='btn btn-primary' onClick={handleClick}>
           Add product
         </button>

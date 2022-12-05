@@ -41,9 +41,10 @@ export const notificationsSlice = createSlice({
         message,
       };
       state.items.push(notification);
-      if (state.items.length > 3) {
-        state.items.shift();
-      }
+      // Usuwanie pierwszego elementu gdy jest ich więcej niż 3
+      // if (state.items.length > 3) {
+      //   state.items.shift();
+      // }
     },
     removeNotifications: (state, action: PayloadAction<{ id: string }>) => {
       const { id } = action.payload;
@@ -58,5 +59,8 @@ export const { addNotifications, removeNotifications } =
 export const selectNotifications = (state: RootState) => {
   return state.notifications.items;
 };
+
+export const selectLast3Notifications = (state: RootState) =>
+  state.notifications.items.slice(-3);
 
 export const notificationsReducer = notificationsSlice.reducer;

@@ -1,5 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
+import { fetchProducts } from './productsAPI';
 
 export interface ProductModel {
   id: string;
@@ -9,77 +10,75 @@ export interface ProductModel {
   currency: string;
 }
 
-export interface ProductState {
+export interface ProductsState {
   products: ProductModel[];
+  searchResults: ProductModel[];
 }
 
-const initialState: ProductState = {
-  products: [
-    {
-      id: '1',
-      name: 'Call od Duty',
-      price: 150,
-      currency: 'PLN',
-      description: 'Super gra',
-    },
-    {
-      id: '2',
-      name: 'Fifa 2022',
-      price: 129,
-      currency: 'PLN',
-      description: 'Super gra',
-    },
-    {
-      id: '3',
-      name: 'Cyberpunk',
-      price: 100,
-      currency: 'PLN',
-      description: 'Super gra',
-    },
-    {
-      id: '4',
-      name: 'God of War',
-      price: 199,
-      currency: 'PLN',
-      description: 'Super gra',
-    },
-    {
-      id: '5',
-      name: 'NBA 2k22',
-      price: 99,
-      currency: 'PLN',
-      description: 'Super gra',
-    },
-    {
-      id: '6',
-      name: 'Crash Bandicoot',
-      price: 149,
-      currency: 'PLN',
-      description: 'Super gra',
-    },
-    {
-      id: '7',
-      name: 'Horizon',
-      price: 169,
-      currency: 'PLN',
-      description: 'Super gra',
-    },
-    {
-      id: '8',
-      name: 'Minecraft',
-      price: 99,
-      currency: 'PLN',
-      description: 'Super gra',
-    },
-  ],
+const initialState: ProductsState = {
+  products: [],
+  searchResults: [],
 };
+
+export const loadProducts = createAsyncThunk(
+  'products/getProducts',
+  async (): Promise<ProductModel[]> => {
+    const productsResponse = await fetchProducts();
+
+    console.log(productsResponse);
+
+    const products = productsResponse.map((product) => {
+      return {
+        id: product.id.toString(),
+        name: product.title,
+        description: product.description,
+        price: product.price,
+        currency: 'PLN',
+      };
+    });
+
+    console.log(products);
+
+    return products;
+  }
+);
 
 export const productsSlice = createSlice({
   name: 'products',
   initialState,
-  reducers: {},
+  reducers: {
+    // dispatch(searchProducts({ query: "Call of Duty "}))
+
+    // PayloadAction<{ id: string }
+    // dispatch(jakaAkca({ id: item.id }))
+
+    // PayloadAction<string>
+    // dispatch(jakasAkcja(item.id));
+
+    searchProducts: (
+      state: ProductsState,
+      action: PayloadAction<{ query: string }>
+    ) => {
+      const { query } = action.payload;
+
+      state.searchResults = state.products.filter((product) =>
+        product.name.toLowerCase().includes(query.toLowerCase())
+      );
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(loadProducts.fulfilled, (state, action) => {
+      state.products = action.payload;
+      state.searchResults = action.payload;
+    });
+  },
 });
 
 export const selectProducts = (state: RootState) => state.products.products;
+
+export const selectSearchResults = (state: RootState) =>
+  state.products.searchResults;
+
+export const { searchProducts } = productsSlice.actions;
 
 export const productsReducer = productsSlice.reducer;

@@ -17,21 +17,21 @@ export function Cart() {
   const items: Item[] = useAppSelector(selectItems);
   const total: number = useAppSelector(selectTotal);
   const isDisplayed: boolean = useAppSelector(selectIsDisplayed);
-
   const dispatch = useAppDispatch();
 
+  const handleRemoveClick = (id: string) => {
+    dispatch(removeItem(id));
+    dispatch(
+      addNotifications({
+        message: `Produkt został usunięty z koszyka`,
+        type: 'info',
+      })
+    );
+  };
+
   const renderRemoveButton = (id: string) => {
-    const handleClick = () => {
-      dispatch(removeItem(id));
-      dispatch(
-        addNotifications({
-          message: 'Produkt został usunięty z koszyka',
-          type: 'warning',
-        })
-      );
-    };
     return (
-      <button className='btn btn-light' onClick={handleClick}>
+      <button className='btn btn-light' onClick={() => handleRemoveClick(id)}>
         Remove
       </button>
     );
@@ -67,7 +67,7 @@ export function Cart() {
     <div
       id='cart'
       className={
-        'card position-absolute top-0 end-0 z-index-1 w-25 ' +
+        'card position-absolute top-0 end-0 z-index-1 w-25 mt-1 me-1 ' +
         (isDisplayed ? 'd-block' : 'd-none')
       }
     >

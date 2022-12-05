@@ -1,7 +1,13 @@
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { Alert } from '../notifications/Alert';
 import { AlertList } from '../notifications/AlertList';
-import { ProductModel, selectProducts } from '../product/productsSlice';
+import {
+  loadProducts,
+  ProductModel,
+  selectProducts,
+  selectSearchResults,
+} from '../product/productsSlice';
 import { Cart } from './Cart';
 import { Product } from './Product';
 import './Shop.css';
@@ -9,13 +15,16 @@ import './Shop.css';
 // tworzę komponent Shop
 export function Shop() {
   const dispatch = useAppDispatch(); //akcja
+  const products: ProductModel[] = useAppSelector(selectSearchResults);
 
-  const products: ProductModel[] = useAppSelector(selectProducts);
+  useEffect(() => {
+    dispatch(loadProducts());
+  }, []);
 
   return (
     <div className='position-relative'>
       <Cart />
-      <div className='container pt-5'>
+      <div className='container pt-3'>
         <div className='products-list mb-5'>
           {products.map((product, key) => (
             <Product

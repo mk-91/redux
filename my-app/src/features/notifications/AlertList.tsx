@@ -1,9 +1,13 @@
 import { useAppSelector } from '../../app/hooks';
 import { Alert } from './Alert';
-import { selectNotifications, Notification } from './notificationsSlice';
+import {
+  selectNotifications,
+  Notification,
+  selectLast3Notifications,
+} from './notificationsSlice';
 
 export function AlertList() {
-  const alerts: Notification[] = useAppSelector(selectNotifications);
+  const alerts: Notification[] = useAppSelector(selectLast3Notifications);
 
   // const alerts = [
   //   { message: 'Pierwsz alert', type: 'success' },
@@ -16,7 +20,12 @@ export function AlertList() {
   return (
     <div>
       {alerts.map((alert) => (
-        <Alert key={alert.id} type={alert.type} message={alert.message} />
+        <Alert
+          key={alert.id}
+          id={alert.id}
+          type={alert.type}
+          message={alert.message}
+        />
       ))}
     </div>
   );
