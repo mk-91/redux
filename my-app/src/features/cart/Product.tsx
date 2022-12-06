@@ -1,16 +1,16 @@
 import { useAppDispatch } from '../../app/hooks';
 import { addNotifications } from '../notifications/notificationsSlice';
+import { ProductModel } from '../product/productsSlice';
 import { addItem, Item } from './cartSlice';
 import './Product.css';
 
 export interface ProductProps {
-  name: string;
-  price: number;
-  id: string;
+  product: ProductModel;
 }
 
-export function Product(product: ProductProps) {
+export function Product(props: ProductProps) {
   const dispatch = useAppDispatch();
+  const { product } = props;
 
   const item: Item = {
     id: product.id,
@@ -31,12 +31,18 @@ export function Product(product: ProductProps) {
 
   return (
     <div className='card'>
+      <div className='d-flex justify-content-center align-items-center product-image-wrapper'>
+        <img className='product-image' src={product.image} alt={product.name} />
+      </div>
       <div className='card-body'>
-        <h3 className='card-title'>{product.name}</h3>
-        <span className='product-price'>{product.price} PLN</span>
-        <button className='btn btn-primary' onClick={handleClick}>
-          Add product
-        </button>
+        <h5 className='card-title'>{product.name}</h5>
+
+        <div className='card-footer d-flex justify-content-between align-items-center'>
+          <strong className='fs-4'>{product.price} PLN</strong>
+          <button className='btn btn-primary' onClick={handleClick}>
+            Add product
+          </button>
+        </div>
       </div>
     </div>
   );
